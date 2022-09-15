@@ -8,22 +8,22 @@ import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.stefan.stinga05.notesapp.MainViewModel
+import com.stefan.stinga05.notesapp.model.Note
 import com.stefan.stinga05.notesapp.navigation.NavRoute
-import androidx.compose.runtime.*
 
 @Composable
-fun AddScreen(navController: NavHostController) {
+fun AddScreen(navController: NavHostController, viewModel: MainViewModel) {
     var title by remember { mutableStateOf("") }
     var subtitle by remember { mutableStateOf("") }
+    var isButtonEnabled by remember { mutableStateOf(false) }
 
     Scaffold {
         Column(
@@ -40,20 +40,31 @@ fun AddScreen(navController: NavHostController) {
 
             OutlinedTextField(
                 value = title,
-                onValueChange = { title = it },
-                label = { Text(text = "Note Title") }
+                onValueChange = {
+                    title = it
+                    isButtonEnabled = title.isNotEmpty() && subtitle.isNotEmpty()
+                },
+                label = { Text(text = "Note Title") },
+                isError = title.isEmpty()
             )
 
             OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
-                label = { Text(text = "Note Title") }
+                value = subtitle,
+                onValueChange = {
+                    subtitle = it
+                    isButtonEnabled = title.isNotEmpty() && subtitle.isNotEmpty()
+                },
+                label = { Text(text = "Note Subtitle") },
+                isError = subtitle.isEmpty()
             )
-            
+
             Button(
                 modifier = Modifier.padding(top = 16.dp),
-                onClick = { 
-                    navController.navigate(NavRoute.Main.route)
+                enabled = isButtonEnabled,
+                onClick = {
+                    viewModel.addNote(note = Note(title = title, subtitle = subtitle)) {
+                        navController.navigate(NavRoute.Main.route)
+                    }
                 }) {
                 Text(text = "Add note")
             }

@@ -1,6 +1,5 @@
 package com.stefan.stinga05.notesapp.screens
 
-import android.app.Application
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,24 +14,17 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.stefan.stinga05.notesapp.MainViewModel
-import com.stefan.stinga05.notesapp.MainViewModelFactory
 import com.stefan.stinga05.notesapp.model.Note
 import com.stefan.stinga05.notesapp.navigation.NavRoute
 
 @Composable
-fun MainScreen(navController: NavHostController) {
-    val context = LocalContext.current
-    val mainViewModel: MainViewModel =
-        viewModel(factory = MainViewModelFactory(context.applicationContext as Application))
-
-    //val notes = mainViewModel.readTest.observeAsState(listOf()).value
+fun MainScreen(navController: NavHostController, viewModel: MainViewModel) {
+    val notes = viewModel.readAllNote().observeAsState(listOf()).value
 
     Scaffold(
         floatingActionButton = {
@@ -46,12 +38,11 @@ fun MainScreen(navController: NavHostController) {
             }
         }
     ) {
-
-       /* LazyColumn {
+        LazyColumn {
             items(notes) { note ->
                 NoteItem(note = note, navController = navController)
             }
-        }*/
+        }
     }
 }
 
@@ -62,7 +53,7 @@ fun NoteItem(note: Note, navController: NavHostController) {
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 24.dp)
             .clickable {
-                navController.navigate(NavRoute.Note.route)
+                navController.navigate(NavRoute.Note.route + "/${note.id}")
             },
         elevation = 6.dp
     ) {

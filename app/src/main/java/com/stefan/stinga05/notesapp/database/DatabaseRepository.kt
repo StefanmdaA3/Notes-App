@@ -2,6 +2,7 @@ package com.stefan.stinga05.notesapp.database
 
 import androidx.lifecycle.LiveData
 import com.stefan.stinga05.notesapp.model.Note
+import com.stefan.stinga05.notesapp.navigation.NavRoute
 
 interface DatabaseRepository {
 

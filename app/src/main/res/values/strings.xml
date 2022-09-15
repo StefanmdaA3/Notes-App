@@ -5,4 +5,5 @@
     <string name="edit_note">Edit Note</string>
     <string name="add_new_note">Add new note</string>
     <string name="update">Update</string>
+    <string name="login">Log In</string>
 </resources>
